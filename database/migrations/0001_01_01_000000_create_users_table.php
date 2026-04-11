@@ -9,14 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+    public function driver()
+    {
+        return $this->hasOne(Driver::class);
+    }
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('full_name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone_number')->unique();
+            $table->string('profile_picture')->nullable();
+
+            $table->enum('role', ['passenger', 'driver', 'admin'])->default('passenger');
+
+            $table->decimal('average_rating', 3, 2)->default(0);
+
             $table->rememberToken();
             $table->timestamps();
         });
