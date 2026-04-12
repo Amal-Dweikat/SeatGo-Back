@@ -24,7 +24,6 @@ export default function Home() {
 
   const [data, setData] = useState<Item[]>([]);
 
-  // 📡 API CALL
   const fetchData = async (params = {}) => {
     const query = new URLSearchParams(params).toString();
 
@@ -36,7 +35,6 @@ export default function Home() {
     setData(json);
   };
 
-  // 🔥 دمج search + filters
   const applyFilters = (newSearch = search, newFilters = filters) => {
     fetchData({
       search: newSearch,
@@ -44,7 +42,6 @@ export default function Home() {
     });
   };
 
-  // 📌 أول تحميل
   useEffect(() => {
     fetchData({});
   }, []);
@@ -52,7 +49,6 @@ export default function Home() {
   return (
     <View style={{ padding: 10, flex: 1 }}>
 
-      {/* 🔍 Search */}
       <SearchBar
         value={search}
         onChange={(text) => {
@@ -61,7 +57,6 @@ export default function Home() {
         }}
       />
 
-      {/* 🎛️ Filters */}
       <FilterBar
         onChange={(f) => {
           setFilters(f);
@@ -69,7 +64,6 @@ export default function Home() {
         }}
       />
 
-      {/* 📦 List */}
       <FlatList
   data={data}
   keyExtractor={(item) => item.id.toString()}

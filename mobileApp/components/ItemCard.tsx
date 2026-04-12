@@ -13,16 +13,13 @@ export default function ItemCard({ item }: { item: Item }) {
   return (
     <View style={styles.card}>
 
-      {/* 🔝 Header */}
       <View style={styles.header}>
         <Text style={styles.title}>{item.name}</Text>
         <Text style={styles.price}>{item.price} ₪</Text>
       </View>
 
-      {/* 📍 City */}
       <Text style={styles.city}>📍 {item.city}</Text>
 
-      {/* 🚗 Transport + 👥 passengers */}
       <View style={styles.row}>
         <Text style={styles.tag}>🚗 {item.transport}</Text>
         <Text style={styles.tag}>👥 {item.passengers} people</Text>

@@ -45,7 +45,6 @@ export default function FilterBar({ onChange }: Props) {
     values: string[]
   ) => (
     <View style={styles.dropdownContainer}>
-      {/* 🔘 Button */}
       <TouchableOpacity
         style={styles.dropdownHeader}
         onPress={() => setOpen(open === key ? null : key)}
@@ -56,7 +55,6 @@ export default function FilterBar({ onChange }: Props) {
         <Text>{open === key ? "▲" : "▼"}</Text>
       </TouchableOpacity>
 
-      {/* 📜 Options */}
       {open === key && (
         <View style={styles.dropdownList}>
           {values.map((item) => (

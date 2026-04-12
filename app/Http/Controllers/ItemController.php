@@ -19,22 +19,21 @@ class ItemController extends Controller
             });
         }
 
-        // 🏙️ city
         if ($request->city) {
             $query->where('city', $request->city);
         }
 
-        // 🚗 transport
+        
         if ($request->transport) {
             $query->where('transport', $request->transport);
         }
 
-        // 💰 price (max)
+     
         if ($request->price) {
             $query->where('price', '<=', $request->price);
         }
 
-        // 👥 passengers (max)
+        
         if ($request->passengers) {
             $query->where('passengers', '<=', $request->passengers);
         }
