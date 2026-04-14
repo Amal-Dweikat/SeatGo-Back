@@ -28,6 +28,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,8 +37,10 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    public function boot(): void
+    public function boot()
     {
-        Schema::defaultStringLength(191);
+        Route::prefix('api')
+        ->middleware('api')
+        ->group(base_path('routes/api.php'));
     }
 }
