@@ -8,8 +8,14 @@ class Item extends Model
 {
     protected $table = 'items';
     protected $fillable = [
-        'name',
-        'city',
-        'price'
+        'driver_name',
+        'driver_image',
+        'from_city',
+        'to_city',
+        'price',
+        'transport',
+        'passengers',
+        'time',
+        'created_at',
     ];
 }
