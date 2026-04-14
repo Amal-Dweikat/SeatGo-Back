@@ -25,6 +25,10 @@ class User extends Authenticatable implements JWTSubject
         'profile_picture',
         'average_rating',
     ];
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 
     /**
 
