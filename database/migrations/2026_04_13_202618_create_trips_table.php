@@ -27,9 +27,9 @@ return new class extends Migration
             $table->enum('status', ['pending', 'active', 'completed', 'cancelled'])
                 ->default('pending');
             $table->boolean("TripRepeat");
+            $table->string('note')->default("Please be on time")->nullable();
             $table->foreignId('driver_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-
         });
     }
 

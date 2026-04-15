@@ -22,6 +22,7 @@ protected $fillable = [
 'replied_admin',
 'status',
 'trip_repeat',
+    'note'
 ];
 
 
