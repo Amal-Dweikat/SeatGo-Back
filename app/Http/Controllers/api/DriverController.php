@@ -27,6 +27,8 @@ class DriverController extends Controller
             'license_number' => $request->license_number,
             'status' => 'pending',
         ]);
+        $user->role = 'driver';
+        $user->save();
 
 
         Car::create([

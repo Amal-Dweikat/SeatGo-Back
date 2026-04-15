@@ -19,6 +19,14 @@ class TripFactory extends Factory
     {
         return [
             'FromCity' => fake()->city(),
+            'transport' => fake()->randomElement([
+                'car',
+                'bus',
+                'taxi',
+                'uber',
+                'van',
+                'motorcycle'
+            ]),
             'ToCity' => fake()->city(),
 
             'FromRegion' => fake()->state(),
