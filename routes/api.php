@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\api\AuthController;
-use App\Http\Controllers\api\DriverInfo;
 use App\Http\Controllers\api\TripInfo;
 
 use Illuminate\Support\Facades\Route;

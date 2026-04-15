@@ -29,6 +29,7 @@ return new class extends Migration
             $table->boolean("TripRepeat");
             $table->string('note')->default("Please be on time")->nullable();
             $table->foreignId('driver_id')->constrained()->onDelete('cascade');
+            $table->string('transport');
             $table->timestamps();
         });
     }
