@@ -14,9 +14,15 @@ return new class extends Migration
     Schema::table('items', function (Blueprint $table) {
         $table->string('from_city')->nullable();
         $table->string('to_city')->nullable();
-        $table->string('time')->nullable();
-        $table->string('driver_name')->nullable();
-        $table->string('driver_image')->nullable();
+        if (!Schema::hasColumn('items', 'time')) {
+            $table->string('time')->nullable();
+        }
+        if (!Schema::hasColumn('items', 'driver_name')) {
+            $table->string('driver_name')->nullable();
+        }
+        if (!Schema::hasColumn('items', 'driver_image')) {
+            $table->string('driver_image')->nullable();
+        }
     });
 }
 

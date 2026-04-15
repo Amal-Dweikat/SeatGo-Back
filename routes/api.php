@@ -10,7 +10,7 @@ use App\Http\Controllers\ItemController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/Booking', [\App\Http\Controllers\api\BookingTrip::class, 'Booking']);
+Route::post('/booking', [\App\Http\Controllers\api\BookingTrip::class, 'Booking']);
 Route::get('/search', [ItemController::class, 'ItemController']);
 Route::get('/test', function () {
     return "hello";

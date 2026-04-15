@@ -8,6 +8,10 @@ class Booking extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+      'UserSelectedDays' => 'array',
+    ];
+
     protected $fillable = [
         'trip_id',
         'user_id',
