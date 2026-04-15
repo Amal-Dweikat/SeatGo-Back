@@ -20,6 +20,7 @@ class TripFactory extends Factory
         return [
             'FromCity' => fake()->city(),
             'ToCity' => fake()->city(),
+
             'FromRegion' => fake()->state(),
             'ToRegion' => fake()->state(),
             'DepartureTime' => fake()->time(),
