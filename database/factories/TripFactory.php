@@ -17,8 +17,26 @@ class TripFactory extends Factory
      */
     public function definition(): array
     {
+        $cities = [
+            'Ramallah' => ['Al-Tireh', 'Beitunia', 'Al-Bireh'],
+            'Nablus' => ['Rafidia', 'Beit Furik', 'Tell'],
+            'Hebron' => ['Halhul', 'Dura', 'Yatta'],
+            'Bethlehem' => ['Beit Sahour', 'Beit Jala', 'Al-Khader'],
+            'Jenin' => ['Qabatiya', 'Arraba', 'Yaabad'],
+            'Tulkarm' => ['Anabta', 'Attil', 'Deir al-Ghusun'],
+            'Qalqilya' => ['Azzun', 'Habla', 'Kafr Thulth'],
+            'Jerusalem' => ['Silwan', 'Shuafat', 'Beit Hanina'],
+            'Gaza' => ['Jabalia', 'Rafah', 'Khan Yunis'],
+            'Jericho' => ['Al-Auja', 'Ein ad-Duyuk'],
+            'Tubas' => ['Tammun', 'Aqqaba'],
+        ];
+        $fromCity = fake()->randomElement(array_keys($cities));
+        $toCity = fake()->randomElement(array_keys($cities));
+
+        $fromRegion = fake()->randomElement($cities[$fromCity]);
+        $toRegion = fake()->randomElement($cities[$toCity]);
         return [
-            'FromCity' => fake()->city(),
+            'FromCity' => $fromCity,
             'transport' => fake()->randomElement([
                 'car',
                 'bus',
@@ -27,14 +45,14 @@ class TripFactory extends Factory
                 'van',
                 'motorcycle'
             ]),
-            'ToCity' => fake()->city(),
+            'ToCity' => $toCity ,
 
-            'FromRegion' => fake()->state(),
-            'ToRegion' => fake()->state(),
-            'DepartureTime' => fake()->time(),
-            'ArrivalTime' => fake()->time(),
+            'FromRegion' => $fromRegion ,
+            'ToRegion' => $toRegion,
+            'DepartureTime' => fake()->time('H:i'),
+            'ArrivalTime' => fake()->time('H:i'),
             'DateTrip' => fake()->date(),
-            'Price' => fake()->numberBetween(5, 50),
+            'Price' => fake()->numberBetween(50, 100),
             'BookedSeats' => 0,
             'TotalSeats' => fake()->numberBetween(3, 7),
             'RepliedAdmin' => false,

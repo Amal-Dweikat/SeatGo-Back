@@ -12,8 +12,6 @@ use App\Http\Controllers\ItemController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/booking', [\App\Http\Controllers\api\BookingTrip::class, 'Booking']);
-Route::get('/trip/{id}', [TripInfo::class, 'getTripById']);
 
 Route::get('/search', [ItemController::class, 'ItemController']);
 Route::get('/test', function () {
@@ -23,6 +21,8 @@ Route::middleware('auth:api')->post('/driver', [DriverController::class, 'store'
 Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/booking', [\App\Http\Controllers\api\BookingTrip::class, 'Booking']);
+    Route::get('/trip/{id}', [TripInfo::class, 'getTripById']);
 });
 
 Route::middleware('auth:api')->post('/driver', [DriverController::class, 'store']);

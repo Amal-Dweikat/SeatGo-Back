@@ -11,7 +11,7 @@ class BookingTrip
     {
         $booking = Booking::create([
             'trip_id' => $request->trip_id ?? 1,
-            'user_id' => $request->user_id ?? 2,
+            'user_id' => auth()->id() ?? 2,
             'numSeatBooked' => $request->NumSeat,
             'UserWantRepeat' => $request->UserWantRepeat ?? false,
             'EndRepeat' => $request->EndRepeat ?? null,
