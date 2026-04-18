@@ -1,43 +1,44 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Item;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 
+
+
+
 class ItemController extends Controller
 {
-public function ItemController(Request $request)
-{
-    $query = Trip::query();
+    public function search(Request $request)
+    {
+        $query = Trip::query();
 
-    if ($request->from_city) {
-    $query->where('FromCity', 'like', "%$request->from_city%");
+        if ($request->FromCity) {
+    $query->where('FromCity', 'like', "%{$request->FromCity}%");
 }
 
-if ($request->to_city) {
-    $query->where('ToCity', 'like', "%$request->to_city%");
+if ($request->ToCity) {
+    $query->where('ToCity', 'like', "%{$request->ToCity}%");
 }
 
-    if ($request->time) {
-        $query->where('DepartureTime', 'like', $request->time . '%');
-    }
-
-    if ($request->transport) {
-        $query->where('transport', $request->transport);
-    }
-
-    if ($request->price) {
-        $query->where('Price', '<=', $request->price);
-    }
-
-    if ($request->passengers) {
-        $query->where('BookedSeats', '<=', $request->passengers);
-    }
-
-    $query->orderBy('created_at', $request->sort ?? 'desc');
-
-    return response()->json($query->get());
+if ($request->DepartureTime) {
+    $query->where('DepartureTime', 'like', $request->DepartureTime . '%');
 }
+
+        if ($request->transport) {
+            $query->where('transport', $request->transport);
+        }
+
+        if ($request->price) {
+            $query->where('Price', '<=', $request->price);
+        }
+
+        if ($request->passengers) {
+            $query->where('BookedSeats', '<=', $request->passengers);
+        }
+
+        $sort = $request->sort == 'asc' ? 'asc' : 'desc';
+$query->orderBy('created_at', $sort);
+        return response()->json($query->get());
+    }
 }

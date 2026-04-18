@@ -9,13 +9,16 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\SearchController;
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/booking', [\App\Http\Controllers\api\BookingTrip::class, 'Booking']);
 Route::get('/trip/{id}', [TripInfo::class, 'getTripById']);
 
-Route::get('/search', [ItemController::class, 'ItemController']);
+Route::get('/search', [ItemController::class, 'search']);
+//Route::get('/search', [SearchController::class, 'search']);
 Route::get('/test', function () {
     return "hello";
 });
@@ -26,5 +29,4 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::middleware('auth:api')->post('/driver', [DriverController::class, 'store']);
-
 

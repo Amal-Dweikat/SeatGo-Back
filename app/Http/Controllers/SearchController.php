@@ -8,20 +8,20 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
-public function search(Request $request)
+    public function search(Request $request)
 {
-    $query = Trip::query();
+    $query = Trip::with('driver')->get();
 
-    if ($request->from) {
-        $query->where('FromCity', 'LIKE', '%' . $request->from . '%');
+    if ($request->FromCity) {
+        $query->where('FromCity', $request->FromCity);
     }
 
-    if ($request->to) {
-        $query->where('ToCity', 'LIKE', '%' . $request->to . '%');
+    if ($request->ToCity) {
+        $query->where('ToCity', $request->ToCity);
     }
 
-    if ($request->time) {
-        $query->where('DepartureTime', $request->time);
+    if ($request->DepartureTime) {
+        $query->whereDate('DepartureTime', $request->DepartureTime);
     }
 
     return response()->json($query->get());
