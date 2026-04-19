@@ -13,4 +13,8 @@ class Driver extends Model
         'license_number',
         'status',
     ];
+    public function trips()
+{
+    return $this->hasMany(Trip::class);
+}
 }
