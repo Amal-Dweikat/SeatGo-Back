@@ -13,4 +13,8 @@ class Driver extends Model
         'license_number',
         'status',
     ];
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

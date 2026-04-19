@@ -18,6 +18,7 @@ class TripInfo extends Controller
         $car = Car::where('driver_id', $driverId)
             ->first();
 
+
         if (!$trip) {
             return response()->json([
                 'message' => 'Trip not found'

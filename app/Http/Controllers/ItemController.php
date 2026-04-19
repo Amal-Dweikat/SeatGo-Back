@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Trip;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
 public function ItemController(Request $request)
 {
-    $query = Trip::query();
+    $query = Trip::with('driver.user');
+
 
     if ($request->from_city) {
     $query->where('FromCity', 'like', "%$request->from_city%");
