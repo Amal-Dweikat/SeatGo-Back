@@ -70,4 +70,53 @@ class AuthController extends Controller
             'message' => 'Logged out successfully'
         ]);
     }
+
+    public function forgotPassword(Request $request)
+{
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'Email not found'], 404);
+    }
+
+    $code = rand(100000, 999999);
+
+    $user->reset_code = $code;
+    $user->save();
+
+    return response()->json([
+        'message' => 'Code sent successfully',
+        'code' => $code 
+    ]);
+}
+
+public function resetPassword(Request $request)
+{
+    $user = User::where('email', $request->email)
+        ->where('reset_code', $request->code)
+        ->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'Invalid request'], 400);
+    }
+
+    $user->password = bcrypt($request->password);
+    $user->reset_code = null; 
+    $user->save();
+
+    return response()->json(['message' => 'Password updated']);
+}
+
+public function verifyCode(Request $request)
+{
+    $user = User::where('email', $request->email)
+        ->where('reset_code', $request->code)
+        ->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'Invalid code'], 400);
+    }
+
+    return response()->json(['message' => 'Code verified']);
+}
 }
