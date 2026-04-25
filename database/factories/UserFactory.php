@@ -32,7 +32,14 @@ class UserFactory extends Factory
             'phone_number' => fake()->unique()->phoneNumber(),
             'role' => fake()->randomElement(['passenger', 'driver']),
             'average_rating' => fake()->randomFloat(2, 0, 5),
-
+            'profile_picture' => fake()->randomElement([
+                'Driver1.jpg',
+                'Driver2.jpg',
+                'Driver3.jpg',
+                'Driver4.jpg',
+                'Driver5.jpg',
+                'Driver6.jpg',
+            ]),
         ];
     }
 
