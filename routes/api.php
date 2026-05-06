@@ -23,7 +23,8 @@ Route::get('/trip/{id}', [TripInfo::class, 'getTripById']);
 Route::get('/search', [ItemController::class, 'search']);
 
 Route::get('/trips/{id}', [TripController::class, 'show']);
-
+Route::put('/trips/{id}', [TripController::class, 'update']);
+Route::delete('/trips/{id}', [TripController::class, 'destroy']);
     Route::post('/booking/{id}/accept', [BookingController::class, 'accept']);
     Route::post('/booking/{id}/reject', [BookingController::class, 'reject']);
 
@@ -32,13 +33,6 @@ Route::delete('/trips/{id}', [TripController::class, 'destroy']);
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/verify-code', [AuthController::class, 'verifyCode']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-
-Route::get('/trips/{id}', [TripController::class, 'show']);
-
-Route::post('/booking/{id}/accept', [BookingController::class, 'accept']);
-Route::post('/booking/{id}/reject', [BookingController::class, 'reject']);
-
-
 
 Route::middleware('auth:api')->post('/driver', [DriverController::class, 'store']);
 Route::middleware('auth:api')->group(function () {

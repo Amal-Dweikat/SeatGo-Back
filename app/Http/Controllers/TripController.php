@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Request;
 use App\Models\Trip;
 
 class TripController extends Controller
@@ -28,6 +28,25 @@ class TripController extends Controller
         'pending' => $trip->bookings->where('status', 'pending')->values(),
         'accepted' => $trip->bookings->where('status', 'accepted')->values(),
     ]);
+}
+
+public function update(Request $request, $id)
+{
+    try {
+        $trip = Trip::findOrFail($id);
+
+        $trip->update($request->all());
+
+        return response()->json([
+            'message' => 'Updated successfully',
+            'trip' => $trip
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+        ], 500);
+    }
 }
 
     public function destroy($id)

@@ -25,23 +25,16 @@ class BookingController extends Controller
     ]);
 }
     public function reject($id)
-    {
-        $booking = Booking::with('trip')->find($id);
+{
+    $booking = Booking::find($id);
 
-        if (!$booking) {
-            return response()->json(['message' => 'Booking not found'], 404);
-        }
-
-        $trip = $booking->trip;
-
-        if ($booking->status === 'accepted' && $trip) {
-            $trip->TotalSeats += 1;
-            $trip->save();
-        }
-
-        $booking->status = 'rejected';
-        $booking->save();
-
-        return response()->json(['message' => 'Booking rejected']);
+    if (!$booking) {
+        return response()->json(['message' => 'Booking not found'], 404);
     }
+
+    $booking->status = 'rejected';
+    $booking->save();
+
+    return response()->json(['message' => 'Booking rejected']);
+}
 }

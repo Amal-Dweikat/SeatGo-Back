@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\api;
+use Illuminate\Support\Facades\Mail;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -73,10 +74,16 @@ class AuthController extends Controller
 
     public function forgotPassword(Request $request)
 {
+    $request->validate([
+        'email' => 'required|email'
+    ]);
+
     $user = User::where('email', $request->email)->first();
 
     if (!$user) {
-        return response()->json(['message' => 'Email not found'], 404);
+        return response()->json([
+            'message' => 'If this email exists, a code will be sent'
+        ], 200);
     }
 
     $code = rand(100000, 999999);
@@ -84,12 +91,15 @@ class AuthController extends Controller
     $user->reset_code = $code;
     $user->save();
 
+    Mail::raw("Your reset code is: $code", function ($message) use ($user) {
+        $message->to($user->email)
+                ->subject('Password Reset Code');
+    });
+
     return response()->json([
-        'message' => 'Code sent successfully',
-        'code' => $code 
+        'message' => 'Code sent successfully'
     ]);
 }
-
 public function resetPassword(Request $request)
 {
     $user = User::where('email', $request->email)
