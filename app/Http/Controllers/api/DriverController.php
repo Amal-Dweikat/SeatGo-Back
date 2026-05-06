@@ -43,7 +43,8 @@ class DriverController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Driver request submitted successfully'
+            'message' => 'Driver request submitted successfully',
+            'user' => $user
         ]);
     }
 
