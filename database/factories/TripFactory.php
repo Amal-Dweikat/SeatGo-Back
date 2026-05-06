@@ -56,7 +56,7 @@ class TripFactory extends Factory
             'BookedSeats' => 0,
             'TotalSeats' => fake()->numberBetween(3, 7),
             'RepliedAdmin' => false,
-            'status' => fake()->randomElement(['pending', 'active', 'completed', 'cancelled']),
+            'status' => fake()->randomElement(['pending','approved', 'active', 'completed', 'cancelled']),
             'TripRepeat' => fake()->boolean(),
             'driver_id' => \App\Models\Driver::factory(),
         ];

@@ -11,6 +11,7 @@ class RepeatTrip extends Model
         'DriverSelectedDays' => 'array',
     ];
     protected $fillable = [
+        'trip_id',
         'EndRepeat',
         'DriverSelectedDays',
     ];

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone_number')->unique();
-            $table->string('profile_picture')->nullable();
+            $table->integer('profile_picture')->nullable();
 
             $table->enum('role', ['passenger', 'driver', 'admin'])->default('passenger');
 

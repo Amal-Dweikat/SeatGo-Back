@@ -20,12 +20,16 @@ Route::get('/search', [ItemController::class, 'search']);
 Route::get('/test', function () {
     return "hello";
 });
+
+
 Route::middleware('auth:api')->post('/driver', [DriverController::class, 'store']);
 Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/booking', [\App\Http\Controllers\api\BookingTrip::class, 'Booking']);
+    Route::post('/booking', [\App\Http\Controllers\api\Trips::class, 'Booking']);
+    Route::post('/schedule-trip', [\App\Http\Controllers\api\Trips::class, 'Schedule']);
     Route::get('/trip/{id}', [TripInfo::class, 'getTripById']);
+    Route::get('/getTripUser', [\App\Http\Controllers\api\Trips::class, 'GetTrip']);
 });
 
 Route::middleware('auth:api')->post('/driver', [DriverController::class, 'store']);

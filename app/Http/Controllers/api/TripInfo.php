@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Car;
+use App\Models\Driver;
 use App\Models\Trip;
 use App\Models\User;
 
@@ -13,7 +14,9 @@ class TripInfo extends Controller
         $trip = Trip::find($id);
 
         $driverId=Trip::where('id',$id)->value('driver_id');
-        $drivers = User::where('id', $driverId)
+        $userId=Driver::where('id',$driverId)->value('user_id');
+
+        $drivers = User::where('id', $userId)
             ->first();
         $car = Car::where('driver_id', $driverId)
             ->first();

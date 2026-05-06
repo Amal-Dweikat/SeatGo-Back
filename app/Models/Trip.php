@@ -19,11 +19,12 @@ protected $fillable = [
 'Price',
 'BookedSeats',
 'TotalSeats',
-'replied_admin',
+'RepliedAdmin',
 'status',
-'trip_repeat',
-    'transport',
-    'note'
+'TripRepeat',
+'transport',
+'note',
+'driver_id'
 ];
 
 
