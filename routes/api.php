@@ -16,6 +16,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::get('/search', [ItemController::class, 'search']);
+
 Route::get('/test', function () {
     return "hello";
 });
@@ -24,12 +25,10 @@ Route::get('/test', function () {
 
 
 
-Route::middleware('auth:api')->post('/driver', [DriverController::class, 'store']);
 Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/booking', [\App\Http\Controllers\api\Trips::class, 'Booking']);
-    Route::post('/schedule-trip', [\App\Http\Controllers\api\Trips::class, 'Schedule']);
     Route::get('/trip/{id}', [TripInfo::class, 'getTripById']);
     Route::put('/user/update', [AuthController::class, 'update']);
     Route::put('/user/update-password', [AuthController::class, 'updatePassword']);
@@ -40,6 +39,7 @@ Route::middleware('auth:api')->group(function () {
 
 
 Route::middleware(['auth:api', 'isDriver'])->group(function () {
+    Route::post('/schedule-trip', [\App\Http\Controllers\api\Trips::class, 'Schedule']);
     Route::get('/driver/stats', [DriverController::class, 'stats']);
     Route::get('/driver/current-trip', [DriverController::class, 'currentTrip']);
     Route::post('/driver/trip/{id}/start', [DriverController::class, 'startTrip']);
