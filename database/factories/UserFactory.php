@@ -24,6 +24,7 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+
         return [
             'full_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
@@ -31,6 +32,7 @@ class UserFactory extends Factory
             'phone_number' => fake()->unique()->phoneNumber(),
             'role' => fake()->randomElement(['passenger', 'driver']),
             'average_rating' => fake()->randomFloat(2, 0, 5),
+            'profile_picture' => fake()->numberBetween(0, 7),
         ];
     }
 

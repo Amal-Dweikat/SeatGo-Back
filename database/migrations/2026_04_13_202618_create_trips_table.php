@@ -24,7 +24,7 @@ return new class extends Migration
             $table->integer('BookedSeats');
             $table->integer('TotalSeats');
             $table->boolean("RepliedAdmin")->default(false)->nullable();
-            $table->enum('status', ['pending', 'active', 'completed', 'cancelled'])
+            $table->enum('status', ['pending', 'active', 'completed', 'approved','cancelled'])
                 ->default('pending');
             $table->boolean("TripRepeat");
             $table->string('note')->default("Please be on time")->nullable();
