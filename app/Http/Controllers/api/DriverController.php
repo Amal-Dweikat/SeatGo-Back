@@ -10,6 +10,7 @@ use App\Models\Driver;
 use App\Models\Car;
 use App\Models\Trip;
 use App\Models\Booking;
+use Carbon\Carbon;
 
 class DriverController extends Controller
 {
@@ -65,13 +66,26 @@ class DriverController extends Controller
 
 
         $upcomingTrips = $driver->trips()
-            ->where('DepartureTime', '>', now())
+            ->where(function ($q) {
+                $q->where('DateTrip', '>', now()->toDateString())
+                ->orWhere(function ($q2) {
+                    $q2->where('DateTrip', now()->toDateString())
+                    ->where('DepartureTime', '>', now()->format('H:i:s'));
+                });
+            })
             ->where('status', '!=', 'completed')
             ->count();
 
 
         $passengers = Booking::whereHas('trip', function ($q) use ($driver) {
             $q->where('driver_id', $driver->id)
+                ->where(function ($q) {
+                    $q->where('DateTrip', '>', now()->toDateString())
+                        ->orWhere(function ($q2) {
+                            $q2->where('DateTrip', now()->toDateString())
+                                ->where('DepartureTime', '>', now()->format('H:i:s'));
+                        });
+                })
                 ->where('status', '!=', 'completed');
         })->sum('numSeatBooked');
 
@@ -98,15 +112,20 @@ class DriverController extends Controller
             return response()->json(null);
         }
 
+        $nowDate = now()->toDateString();
+        $nowTime = now()->format('H:i:s');
+
 
         $trip = $driver->trips()
-            ->where('DepartureTime', '<=', now())
-            ->where('ArrivalTime', '>=', now())
+            ->where('DateTrip', $nowDate)
+            ->where('DepartureTime', '<=', $nowTime)
+            ->where('ArrivalTime', '>=', $nowTime)
             ->first();
 
         if (!$trip) {
             return response()->json(null);
         }
+
 
         $passengers = Booking::where('trip_id', $trip->id)
             ->sum('numSeatBooked');
