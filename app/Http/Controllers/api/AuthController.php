@@ -82,8 +82,8 @@ class AuthController extends Controller
 
     if (!$user) {
         return response()->json([
-            'message' => 'If this email exists, a code will be sent'
-        ], 200);
+            'message' => 'USER NOT FOUND'
+        ], 404);
     }
 
     $code = rand(100000, 999999);
@@ -93,40 +93,57 @@ class AuthController extends Controller
 
     Mail::raw("Your reset code is: $code", function ($message) use ($user) {
         $message->to($user->email)
-                ->subject('Password Reset Code');
+            ->subject('Password Reset Code');
     });
 
     return response()->json([
-        'message' => 'Code sent successfully'
+        'message' => 'SENT'
     ]);
 }
-public function resetPassword(Request $request)
-{
-    $user = User::where('email', $request->email)
-        ->where('reset_code', $request->code)
-        ->first();
 
-    if (!$user) {
-        return response()->json(['message' => 'Invalid request'], 400);
-    }
-
-    $user->password = bcrypt($request->password);
-    $user->reset_code = null; 
-    $user->save();
-
-    return response()->json(['message' => 'Password updated']);
-}
 
 public function verifyCode(Request $request)
 {
-    $user = User::where('email', $request->email)
-        ->where('reset_code', $request->code)
-        ->first();
+    $request->validate([
+        'email' => 'required|email',
+        'code' => 'required'
+    ]);
+
+    $user = User::where('email', $request->email)->first();
 
     if (!$user) {
-        return response()->json(['message' => 'Invalid code'], 400);
+        return response()->json(['message' => 'USER_NOT_FOUND'], 404);
     }
 
-    return response()->json(['message' => 'Code verified']);
+    if ((string)$user->reset_code !== (string)$request->code) {
+        return response()->json(['message' => 'INVALID_CODE'], 400);
+    }
+
+    return response()->json(['message' => 'VERIFIED']);
+}
+
+public function resetPassword(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'code' => 'required',
+        'password' => 'required|min:6'
+    ]);
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json(['message' => 'USER NOT FOUND'], 404);
+    }
+
+    if ((string)$user->reset_code !== (string)$request->code) {
+        return response()->json(['message' => 'INVALID_CODE'], 400);
+    }
+
+    $user->password = bcrypt($request->password);
+    $user->reset_code = null;
+    $user->save();
+
+    return response()->json(['message' => 'SUCCESS']);
 }
 }
