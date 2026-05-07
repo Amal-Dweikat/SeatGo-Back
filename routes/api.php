@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\TripInfo;
 
+use App\Http\Controllers\RatingController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DriverController;
 use Illuminate\Http\Request;
@@ -35,6 +36,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/user/update-image', [AuthController::class, 'updateImage']);
     Route::post('/driver', [DriverController::class, 'store']);
     Route::get('/getTripUser', [\App\Http\Controllers\api\Trips::class, 'GetTrip']);
+    Route::post('/rating', [RatingController::class, 'store']);
+    Route::get('/finished-trip', [RatingController::class, 'finishedTrip']);
+    Route::post('/favorite', [RatingController::class, 'addFavorite']);
 });
 
 
@@ -44,6 +48,7 @@ Route::middleware(['auth:api', 'isDriver'])->group(function () {
     Route::get('/driver/current-trip', [DriverController::class, 'currentTrip']);
     Route::post('/driver/trip/{id}/start', [DriverController::class, 'startTrip']);
     Route::post('/driver/trip/{id}/end', [DriverController::class, 'endTrip']);
+    Route::get('/driver/upcoming-trips', [DriverController::class, 'upcomingTrips']);
 
 });
 

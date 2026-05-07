@@ -112,20 +112,15 @@ class DriverController extends Controller
             return response()->json(null);
         }
 
-        $nowDate = now()->toDateString();
-        $nowTime = now()->format('H:i:s');
-
 
         $trip = $driver->trips()
-            ->where('DateTrip', $nowDate)
-            ->where('DepartureTime', '<=', $nowTime)
-            ->where('ArrivalTime', '>=', $nowTime)
+            ->where('DepartureTime', '<=', now())
+            ->where('ArrivalTime', '>=', now())
             ->first();
 
         if (!$trip) {
             return response()->json(null);
         }
-
 
         $passengers = Booking::where('trip_id', $trip->id)
             ->sum('numSeatBooked');
@@ -139,6 +134,7 @@ class DriverController extends Controller
             'status' => $trip->status,
         ]);
     }
+
 
 
     public function startTrip($id)
@@ -155,6 +151,7 @@ class DriverController extends Controller
     }
 
 
+
     public function endTrip($id)
     {
         $trip = Trip::findOrFail($id);
@@ -164,7 +161,30 @@ class DriverController extends Controller
 
         return response()->json([
             'message' => 'Trip ended',
-            'trip' => $trip
+            'trip' => $trip->load('bookings.user')
         ]);
+    }
+    public function upcomingTrips()
+    {
+        $user = auth()->user();
+
+        $driver = Driver::where('user_id', $user->id)->first();
+
+        if (!$driver) {
+            return response()->json([]);
+        }
+
+        $trips = $driver->trips()
+            ->where(function ($q) {
+                $q->where('DateTrip', '>', now()->toDateString())
+                    ->orWhere(function ($q2) {
+                        $q2->where('DateTrip', now()->toDateString())
+                            ->where('DepartureTime', '>', now()->format('H:i:s'));
+                    });
+            })
+            ->where('status', '!=', 'completed')
+            ->get();
+
+        return response()->json($trips);
     }
 }
