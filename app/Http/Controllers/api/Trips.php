@@ -36,6 +36,14 @@ class Trips
             'data' => $booking
         ], 201);
     }
+    public function myBookings()
+    {
+        $bookings = Booking::where('user_id', auth()->id())
+            ->select('id', 'status')
+            ->get();
+
+        return response()->json($bookings);
+    }
     public function Schedule(Request $request)
     {
 

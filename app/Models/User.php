@@ -24,12 +24,16 @@ class User extends Authenticatable implements JWTSubject
         'role',
         'profile_picture',
         'average_rating',
+        'token_push_notification',
     ];
     public function bookings()
     {
         return $this->hasMany(Booking::class);
     }
-
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
     /**
 
      */
