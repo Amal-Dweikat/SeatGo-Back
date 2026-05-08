@@ -24,7 +24,6 @@ class User extends Authenticatable implements JWTSubject
         'role',
         'profile_picture',
         'average_rating',
-        'token_push_notification',
     ];
     public function bookings()
     {
@@ -34,6 +33,26 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Notification::class);
     }
+
+    public function givenRatings()
+    {
+        return $this->hasMany(Rating::class, 'rater_user_id');
+    }
+
+    public function receivedRatings()
+    {
+        return $this->hasMany(Rating::class, 'rated_user_id');
+    }
+    public function favoriteDrivers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'favorite_drivers',
+            'user_id',
+            'driver_id'
+        );
+    }
+
     /**
 
      */

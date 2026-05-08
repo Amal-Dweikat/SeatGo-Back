@@ -10,6 +10,7 @@ use App\Models\Driver;
 use App\Models\Car;
 use App\Models\Trip;
 use App\Models\Booking;
+use Carbon\Carbon;
 
 class DriverController extends Controller
 {
@@ -65,13 +66,26 @@ class DriverController extends Controller
 
 
         $upcomingTrips = $driver->trips()
-            ->where('DepartureTime', '>', now())
+            ->where(function ($q) {
+                $q->where('DateTrip', '>', now()->toDateString())
+                ->orWhere(function ($q2) {
+                    $q2->where('DateTrip', now()->toDateString())
+                    ->where('DepartureTime', '>', now()->format('H:i:s'));
+                });
+            })
             ->where('status', '!=', 'completed')
             ->count();
 
 
         $passengers = Booking::whereHas('trip', function ($q) use ($driver) {
             $q->where('driver_id', $driver->id)
+                ->where(function ($q) {
+                    $q->where('DateTrip', '>', now()->toDateString())
+                        ->orWhere(function ($q2) {
+                            $q2->where('DateTrip', now()->toDateString())
+                                ->where('DepartureTime', '>', now()->format('H:i:s'));
+                        });
+                })
                 ->where('status', '!=', 'completed');
         })->sum('numSeatBooked');
 
@@ -122,6 +136,7 @@ class DriverController extends Controller
     }
 
 
+
     public function startTrip($id)
     {
         $trip = Trip::findOrFail($id);
@@ -136,6 +151,7 @@ class DriverController extends Controller
     }
 
 
+
     public function endTrip($id)
     {
         $trip = Trip::findOrFail($id);
@@ -145,7 +161,30 @@ class DriverController extends Controller
 
         return response()->json([
             'message' => 'Trip ended',
-            'trip' => $trip
+            'trip' => $trip->load('bookings.user')
         ]);
+    }
+    public function upcomingTrips()
+    {
+        $user = auth()->user();
+
+        $driver = Driver::where('user_id', $user->id)->first();
+
+        if (!$driver) {
+            return response()->json([]);
+        }
+
+        $trips = $driver->trips()
+            ->where(function ($q) {
+                $q->where('DateTrip', '>', now()->toDateString())
+                    ->orWhere(function ($q2) {
+                        $q2->where('DateTrip', now()->toDateString())
+                            ->where('DepartureTime', '>', now()->format('H:i:s'));
+                    });
+            })
+            ->where('status', '!=', 'completed')
+            ->get();
+
+        return response()->json($trips);
     }
 }
