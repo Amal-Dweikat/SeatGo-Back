@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Booking;
+use App\Models\Car;
 use App\Models\Driver;
 use App\Models\RepeatTrip;
 use App\Models\Trip;
@@ -103,5 +104,7 @@ $driverId=Driver::where('user_id',auth()->id())->value('id');
         ]);
 
     }
+
+
 
 }

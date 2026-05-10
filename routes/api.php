@@ -44,6 +44,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/getTripUser', [Trips::class, 'GetTrip']);
     Route::get('/getTripUser', [\App\Http\Controllers\api\Trips::class, 'GetTrip']);
     Route::post('/rating', [RatingController::class, 'store']);
+    Route::post('/notificationFavorite', [NotificationController::class, 'notificationForFavorite']);
     Route::get('/finished-trip', [RatingController::class, 'finishedTrip']);
     Route::post('/favorite', [RatingController::class, 'addFavorite']);
 });

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Booking;
+use App\Models\Driver;
+use App\Models\FavoriteDriver;
 use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -51,14 +54,32 @@ class NotificationController
             'message' => 'Booking status updated'
         ]);
     }
+    public function notificationForFavorite( )
+    {
+        $user = Driver::where("user_id",auth()->id())->value('id');
+
+        $favorites = FavoriteDriver::where('driver_id', $user)->get();
+
+        foreach ($favorites as $favorite) {
+
+              Notification::create([
+                'user_id' => $favorite->user_id,
+                'booking_id' => null,
+                'title' => 'New Trip 🚗',
+                'body' => 'Your favorite driver created a new trip',
+                'type' => 'favorite_driver_trip',
+            ]);
+        }
+        return response()->json([
+            'notification' => $favorites
+        ]);
+    }
+
+
     public function getNotification()
     {
         $user = auth()->id();
-
-
-
        $notification= Notification::where("user_id",$user)->where("is_read",false)->get();
-
         return response()->json([
             'notification' => $notification
         ]);
