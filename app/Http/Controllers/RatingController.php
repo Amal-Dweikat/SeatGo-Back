@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Rating;
 use App\Models\Trip;
 use App\Models\FavoriteDriver;
+use App\Models\User;
 class RatingController extends Controller
 {
     public function store(Request $request)
@@ -22,7 +23,14 @@ class RatingController extends Controller
             'rated_user_id' => $request->rated_user_id,
             'rating' => $request->rating,
         ]);
+        $average = Rating::where('rated_user_id', $request->rated_user_id)
+            ->avg('rating');
 
+        $user = User::find($request->rated_user_id);
+
+        $user->average_rating = round($average, 1);
+
+        $user->save();
         return response()->json(['message' => 'Rated successfully']);
     }
     public function finishedTrip()
@@ -36,7 +44,18 @@ class RatingController extends Controller
             ->latest()
             ->first();
 
-        if (!$trip) return response()->json(null);
+        if (!$trip) {
+            return response()->json(null);
+        }
+
+        $alreadyRated = Rating::where('trip_id', $trip->id)
+            ->where('rater_user_id', $user->id)
+            ->where('rated_user_id', $trip->driver->user->id)
+            ->exists();
+
+        if ($alreadyRated) {
+            return response()->json(null);
+        }
 
         return response()->json([
             'trip' => $trip,
