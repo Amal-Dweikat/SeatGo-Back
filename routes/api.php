@@ -44,5 +44,16 @@ Route::middleware('auth:api')->group(function () {
     //Route::post('/booking/{id}/reject', [BookingController::class, 'reject']);
 
 });
+//Route::get('/favorite-drivers', [AuthController::class, 'show']);
+
+Route::middleware('auth:api')->get(
+    '/favorite-drivers',
+    [AuthController::class, 'favoriteDrivers']
+);
+
+Route::middleware('auth:api')->delete(
+    '/favorite-drivers/{driverId}',
+    [AuthController::class, 'removeFavoriteDriver']
+);
 
 Route::middleware('auth:api')->post('/driver', [DriverController::class, 'store']);

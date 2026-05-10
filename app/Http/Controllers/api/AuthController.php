@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\api;
 use Illuminate\Support\Facades\Mail;
-
+use App\Models\FavoriteDriver;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -38,9 +38,6 @@ class AuthController extends Controller
             'token' => $token
         ], 201);
     }
-
-
-
 
     public function login(Request $request)
     {
@@ -145,5 +142,34 @@ public function resetPassword(Request $request)
     $user->save();
 
     return response()->json(['message' => 'SUCCESS']);
+}
+
+public function favoriteDrivers()
+{
+    $userId = auth()->id();
+
+    $favorites = \DB::table('favorite_drivers')
+        ->join('users', 'favorite_drivers.driver_id', '=', 'users.id')
+        ->select(
+            'users.id',
+            'users.full_name',
+            'users.email',
+            'users.profile_picture',
+            'users.average_rating' 
+        )
+        ->where('favorite_drivers.user_id', $userId)
+        ->get();
+
+    return response()->json($favorites);
+}
+public function removeFavoriteDriver($driverId)
+{
+    FavoriteDriver::where('user_id', auth()->id())
+        ->where('driver_id', $driverId)
+        ->delete();
+
+    return response()->json([
+        'message' => 'Removed successfully'
+    ]);
 }
 }

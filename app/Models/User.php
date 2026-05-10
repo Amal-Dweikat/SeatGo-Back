@@ -64,4 +64,13 @@ class User extends Authenticatable implements JWTSubject
             'average_rating' => 'float',
         ];
     }
+    public function favoriteDrivers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'favorite_drivers',
+            'user_id',
+            'driver_id'
+        );
+    }
 }
