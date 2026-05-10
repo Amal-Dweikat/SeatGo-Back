@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
+
     use HasFactory;
     protected $casts = [
-        'UserSelectedDays' => 'array',
-    ];
+    'UserSelectedDays' => 'array',
+    'accepted_at' => 'datetime',
+];
     protected $fillable = [
         'trip_id',
         'user_id',

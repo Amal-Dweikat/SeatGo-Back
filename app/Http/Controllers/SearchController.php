@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
-    public function search(Request $request)
+   public function search(Request $request)
 {
-    $query = Trip::with('driver')->get();
+    $query = Trip::with('driver.user')
+        ->where('status', '!=', 'completed');
 
     if ($request->FromCity) {
         $query->where('FromCity', $request->FromCity);
@@ -24,7 +25,23 @@ class SearchController extends Controller
         $query->whereDate('DepartureTime', $request->DepartureTime);
     }
 
-    return response()->json($query->get());
-}
-}
+    return response()->json(
+        $query->get()->map(function ($trip) {
+            return [
+                'id' => $trip->id,
+                'FromCity' => $trip->FromCity,
+                'ToCity' => $trip->ToCity,
+                'DepartureTime' => $trip->DepartureTime,
+                'Price' => $trip->Price,
+                'BookedSeats' => $trip->BookedSeats,
+                'transport' => $trip->transport,
 
+                'driver_name' => $trip->driver->user->full_name ?? null,
+                'driver_image' => $trip->driver->user->profile_picture
+                    ? url('storage/' . $trip->driver->user->profile_picture)
+                    : null,
+            ];
+        })
+    );
+}
+}

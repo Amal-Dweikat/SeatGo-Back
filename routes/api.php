@@ -13,11 +13,31 @@ use App\Models\Item;
 
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TripController;
+use App\Http\Controllers\BookingController;
+
 
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/booking', [\App\Http\Controllers\api\BookingTrip::class, 'Booking']);
+Route::get('/trip/{id}', [TripInfo::class, 'getTripById']);
 
+Route::get('/search', [ItemController::class, 'search']);
+
+Route::get('/trips/{id}', [TripController::class, 'show']);
+Route::put('/trips/{id}', [TripController::class, 'update']);
+Route::delete('/trips/{id}', [TripController::class, 'destroy']);
+    Route::post('/booking/{id}/accept', [BookingController::class, 'accept']);
+    Route::post('/booking/{id}/reject', [BookingController::class, 'reject']);
+
+//Route::get('/search', [SearchController::class, 'search']);
+Route::delete('/trips/{id}', [TripController::class, 'destroy']);
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/verify-code', [AuthController::class, 'verifyCode']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+
+Route::middleware('auth:api')->post('/driver', [DriverController::class, 'store']);
 Route::get('/search', [ItemController::class, 'search']);
 
 Route::get('/test', function () {
@@ -47,7 +67,23 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/notificationFavorite', [NotificationController::class, 'notificationForFavorite']);
     Route::get('/finished-trip', [RatingController::class, 'finishedTrip']);
     Route::post('/favorite', [RatingController::class, 'addFavorite']);
+
+    //Route::get('/trips/{id}', [TripController::class, 'show']);
+    //Route::post('/booking/{id}/accept', [BookingController::class, 'accept']);
+    //Route::post('/booking/{id}/reject', [BookingController::class, 'reject']);
+
 });
+//Route::get('/favorite-drivers', [AuthController::class, 'show']);
+
+Route::middleware('auth:api')->get(
+    '/favorite-drivers',
+    [AuthController::class, 'favoriteDrivers']
+);
+
+Route::middleware('auth:api')->delete(
+    '/favorite-drivers/{driverId}',
+    [AuthController::class, 'removeFavoriteDriver']
+);
 
 
 Route::middleware(['auth:api', 'isDriver'])->group(function () {

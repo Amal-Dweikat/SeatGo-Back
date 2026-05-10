@@ -14,14 +14,13 @@ class Driver extends Model
         'license_number',
         'status',
     ];
-
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function trips()
-    {
-        return $this->hasMany(Trip::class);
-    }
+{
+    return $this->hasMany(Trip::class);
+}
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }
