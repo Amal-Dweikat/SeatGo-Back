@@ -10,7 +10,8 @@ class SearchController extends Controller
 {
    public function search(Request $request)
 {
-    $query = Trip::with('driver.user');
+    $query = Trip::with('driver.user')
+        ->where('status', '!=', 'completed');
 
     if ($request->FromCity) {
         $query->where('FromCity', $request->FromCity);
