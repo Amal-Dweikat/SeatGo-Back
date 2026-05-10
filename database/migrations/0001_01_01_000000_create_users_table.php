@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone_number')->unique();
             $table->integer('profile_picture')->nullable();
-
             $table->enum('role', ['passenger', 'driver', 'admin'])->default('passenger');
 
             $table->decimal('average_rating', 3, 2)->default(0);

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('EndRepeat')->nullable();
             $table->json('UserSelectedDays')->nullable();
             $table->integer('numSeatBooked');
+            $table->enum('status', ['pending', 'approved','rejected'])->default('pending');
             $table->foreignId('trip_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();

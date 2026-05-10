@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\NotificationController;
 use App\Http\Controllers\api\TripInfo;
 
 use App\Http\Controllers\RatingController;
+use App\Http\Controllers\api\Trips;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DriverController;
 use Illuminate\Http\Request;
@@ -29,21 +31,27 @@ Route::get('/test', function () {
 Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/booking', [\App\Http\Controllers\api\Trips::class, 'Booking']);
+    Route::post('/booking', [Trips::class, 'Booking']);
+    Route::get('/myBooking', [Trips::class, 'myBookings']);
+    Route::put('/booking/{id}/status', [NotificationController::class, 'changeStatusBooking']);
     Route::get('/trip/{id}', [TripInfo::class, 'getTripById']);
+    Route::get('/notification', [NotificationController::class, 'getNotification']);
+    Route::put('/notification/{id}', [NotificationController::class, 'notificationRead']);
     Route::put('/user/update', [AuthController::class, 'update']);
     Route::put('/user/update-password', [AuthController::class, 'updatePassword']);
     Route::post('/user/update-image', [AuthController::class, 'updateImage']);
     Route::post('/driver', [DriverController::class, 'store']);
+    Route::get('/getTripUser', [Trips::class, 'GetTrip']);
     Route::get('/getTripUser', [\App\Http\Controllers\api\Trips::class, 'GetTrip']);
     Route::post('/rating', [RatingController::class, 'store']);
+    Route::post('/notificationFavorite', [NotificationController::class, 'notificationForFavorite']);
     Route::get('/finished-trip', [RatingController::class, 'finishedTrip']);
     Route::post('/favorite', [RatingController::class, 'addFavorite']);
 });
 
 
 Route::middleware(['auth:api', 'isDriver'])->group(function () {
-    Route::post('/schedule-trip', [\App\Http\Controllers\api\Trips::class, 'Schedule']);
+    Route::post('/schedule-trip', [Trips::class, 'Schedule']);
     Route::get('/driver/stats', [DriverController::class, 'stats']);
     Route::get('/driver/current-trip', [DriverController::class, 'currentTrip']);
     Route::post('/driver/trip/{id}/start', [DriverController::class, 'startTrip']);

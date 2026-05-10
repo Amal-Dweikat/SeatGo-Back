@@ -17,6 +17,7 @@ class Booking extends Model
         'EndRepeat',
         'UserSelectedDays',
         'numSeatBooked',
+        'status',
     ];
 
 
@@ -29,5 +30,8 @@ class Booking extends Model
     {
         return $this->belongsTo(Trip::class);
     }
-
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }

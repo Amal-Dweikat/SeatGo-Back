@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\Booking;
+use App\Models\Car;
 use App\Models\Driver;
 use App\Models\RepeatTrip;
 use App\Models\Trip;
@@ -35,6 +36,14 @@ class Trips
             'message' => 'Booking created successfully',
             'data' => $booking
         ], 201);
+    }
+    public function myBookings()
+    {
+        $bookings = Booking::where('user_id', auth()->id())
+            ->select('id', 'status')
+            ->get();
+
+        return response()->json($bookings);
     }
     public function Schedule(Request $request)
     {
@@ -95,5 +104,7 @@ $driverId=Driver::where('user_id',auth()->id())->value('id');
         ]);
 
     }
+
+
 
 }

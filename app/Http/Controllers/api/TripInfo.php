@@ -11,7 +11,7 @@ class TripInfo extends Controller
 {
     public function getTripById($id)
     {
-        $trip = Trip::find($id);
+        $trip = Trip::with('repeatTrip')->where('id', $id)->get();
 
         $driverId=Trip::where('id',$id)->value('driver_id');
         $userId=Driver::where('id',$driverId)->value('user_id');
