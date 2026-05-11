@@ -8,16 +8,16 @@ return new class extends Migration
 {
     public function up(): void
 {
-    Schema::table('bookings', function (Blueprint $table) {
-        $table->string('status')->default('pending');
-        $table->timestamp('accepted_at')->nullable(); 
+    Schema::table('users', function (Blueprint $table) {
+        $table->string('status')->default('pending')->nullable();
+        $table->timestamp('accepted_at')->nullable();
     });
 }
     public function down(): void
 {
-    Schema::table('bookings', function (Blueprint $table) {
+    Schema::table('users', function (Blueprint $table) {
         $table->dropColumn('status');
-        $table->dropColumn('accepted_at'); 
+        $table->dropColumn('accepted_at');
     });
 }
 };
