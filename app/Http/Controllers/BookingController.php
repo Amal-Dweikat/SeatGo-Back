@@ -3,38 +3,49 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    public function accept($id)
+    public function updateStatus($id, Request $request)
 {
-    $booking = Booking::find($id);
+    $request->validate([
+        'status' => 'required|in:approved,rejected'
+    ]);
 
-    if (!$booking) {
-        return response()->json(['message' => 'Booking not found'], 404);
+    $booking = Booking::with('trip')->findOrFail($id);
+    $trip = $booking->trip;
+
+    $bookedSeats = Booking::where('trip_id', $trip->id)
+        ->where('status', 'approved')
+        ->where('id', '!=', $booking->id) 
+        ->sum('numSeatBooked');
+
+    if ($request->status === 'approved') {
+
+        $newTotal = $bookedSeats + $booking->numSeatBooked;
+
+        if ($newTotal > $trip->TotalSeats) {
+            return response()->json([
+                'message' => 'Not enough seats available'
+            ], 422);
+        }
+
+        $booking->accepted_at = now();
     }
 
-    $booking->status = 'accepted';
-    $booking->accepted_at = now(); 
+    if ($request->status === 'rejected') {
+        $booking->accepted_at = null;
+    }
+
+    $booking->status = $request->status;
+
     $booking->save();
 
     return response()->json([
-        'message' => 'Accepted successfully',
-        'booking' => $booking
+        'message' => 'Status updated successfully',
+        'booking' => $booking->load('user')
     ]);
-}
-    public function reject($id)
-{
-    $booking = Booking::find($id);
-
-    if (!$booking) {
-        return response()->json(['message' => 'Booking not found'], 404);
-    }
-
-    $booking->status = 'rejected';
-    $booking->save();
-
-    return response()->json(['message' => 'Booking rejected']);
 }
 }

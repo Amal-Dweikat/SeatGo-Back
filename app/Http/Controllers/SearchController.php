@@ -11,7 +11,7 @@ class SearchController extends Controller
    public function search(Request $request)
 {
     $query = Trip::with('driver.user')
-        ->where('status', '!=', 'completed');
+    ->whereNotIn('status', ['completed', 'cancelled']);
 
     if ($request->FromCity) {
         $query->where('FromCity', $request->FromCity);
@@ -26,22 +26,23 @@ class SearchController extends Controller
     }
 
     return response()->json(
-        $query->get()->map(function ($trip) {
-            return [
-                'id' => $trip->id,
-                'FromCity' => $trip->FromCity,
-                'ToCity' => $trip->ToCity,
-                'DepartureTime' => $trip->DepartureTime,
-                'Price' => $trip->Price,
-                'BookedSeats' => $trip->BookedSeats,
-                'transport' => $trip->transport,
+    $query->get()->map(function ($trip) {
+        return [
+            'id' => $trip->id,
+            'FromCity' => $trip->FromCity,
+            'ToCity' => $trip->ToCity,
+            'DepartureTime' => $trip->DepartureTime,
+            'Price' => $trip->Price,
+            'BookedSeats' => $trip->BookedSeats,
+            'transport' => $trip->transport,
+            'status' => $trip->status,
 
-                'driver_name' => $trip->driver->user->full_name ?? null,
-                'driver_image' => $trip->driver->user->profile_picture
-                    ? url('storage/' . $trip->driver->user->profile_picture)
-                    : null,
-            ];
-        })
-    );
+            'driver_name' => $trip->driver->user->full_name ?? null,
+            'driver_image' => $trip->driver->user->profile_picture
+                ? url('storage/' . $trip->driver->user->profile_picture)
+                : null,
+        ];
+    })
+);
 }
 }
