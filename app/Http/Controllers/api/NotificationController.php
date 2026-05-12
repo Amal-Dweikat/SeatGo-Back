@@ -56,7 +56,7 @@ class NotificationController
     }
     public function notificationForFavorite( )
     {
-        $user = Driver::where("user_id",auth()->id())->value('id');
+        $user = auth()->id();
 
         $favorites = FavoriteDriver::where('driver_id', $user)->get();
 

@@ -86,21 +86,16 @@ $driverId=Driver::where('user_id',auth()->id())->value('id');
 
 
         if ($user->role === 'driver') {
-
             $driverId = Driver::where('user_id', $user->id)->value('id');
-
             $trips = Trip::with('repeatTrip')->where('driver_id', $driverId)->get();
         }
 
         else {
-
-
-             $trips = Booking::where('user_id', $user->id)->with('trip')->get();
+             $trips = Booking::where('user_id', $user->id)->where('status','approved')->with('trip')->get();
         }
 
         return response()->json([
             'Trip' => $trips,
-
         ]);
 
     }

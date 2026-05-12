@@ -44,7 +44,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/user/update-image', [AuthController::class, 'updateImage']);
     Route::post('/driver', [DriverController::class, 'store']);
     Route::get('/getTripUser', [Trips::class, 'GetTrip']);
-    Route::get('/getTripUser', [\App\Http\Controllers\api\Trips::class, 'GetTrip']);
+  //  Route::get('/getTripUser', [\App\Http\Controllers\api\Trips::class, 'GetTrip']);
     Route::post('/rating', [RatingController::class, 'store']);
     Route::post('/notificationFavorite', [NotificationController::class, 'notificationForFavorite']);
     Route::get('/finished-trip', [RatingController::class, 'finishedTrip']);
