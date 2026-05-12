@@ -183,6 +183,7 @@ class DriverController extends Controller
                     });
             })
             ->where('status', '!=', 'completed')
+            ->where('status', '!=', 'cancelled')
             ->get();
 
         return response()->json($trips);
