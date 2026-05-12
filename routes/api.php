@@ -21,7 +21,9 @@ use App\Http\Controllers\BookingController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-
+Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+Route::post('/verify-code', [AuthController::class, 'verifyCode']);
+Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 
 
@@ -49,9 +51,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/notificationFavorite', [NotificationController::class, 'notificationForFavorite']);
     Route::get('/finished-trip', [RatingController::class, 'finishedTrip']);
     Route::post('/favorite', [RatingController::class, 'addFavorite']);
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('/verify-code', [AuthController::class, 'verifyCode']);
-    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     Route::get('/favorite-drivers', [AuthController::class, 'favoriteDrivers']);
     Route::delete('/favorite-drivers/{driverId}', [AuthController::class, 'removeFavoriteDriver']);
     Route::post('/driver', [DriverController::class, 'store']);

@@ -11,6 +11,7 @@ return new class extends Migration
     Schema::table('users', function (Blueprint $table) {
         $table->string('status')->default('pending')->nullable();
         $table->timestamp('accepted_at')->nullable();
+        $table->string('reset_code')->nullable();
     });
 }
     public function down(): void
@@ -18,6 +19,7 @@ return new class extends Migration
     Schema::table('users', function (Blueprint $table) {
         $table->dropColumn('status');
         $table->dropColumn('accepted_at');
+        $table->dropColumn('reset_code');
     });
 }
 };
