@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Trip;
+use App\Models\Booking;
 
 class TripController extends Controller
 {
@@ -10,24 +11,49 @@ class TripController extends Controller
 {
     $trip = Trip::with(['bookings.user'])->find($id);
 
-    if (!$trip) {
-        return response()->json(['message' => 'Trip not found'], 404);
-    }
-
-    $acceptedCount = $trip->bookings
-        ->where('status', 'accepted')
-        ->count();
-
-    $availableSeats = $trip->TotalSeats - $acceptedCount;
-
+if (!$trip) {
     return response()->json([
-        'trip' => [
-            ...$trip->toArray(),
-            'available_seats' => $availableSeats, 
-        ],
-        'pending' => $trip->bookings->where('status', 'pending')->values(),
-        'accepted' => $trip->bookings->where('status', 'accepted')->values(),
-    ]);
+        'message' => 'Trip not found'
+    ], 404);
+}
+
+$approvedBookings = $trip->bookings->where('status', 'approved');
+
+$bookedSeats = $approvedBookings->sum('numSeatBooked');
+
+return response()->json([
+    'trip' => [
+        ...$trip->toArray(),
+        'BookedSeats' => $bookedSeats,
+        'available_seats' => $trip->TotalSeats - $bookedSeats,
+    ],
+
+    'pending' => $trip->bookings
+        ->where('status', 'pending')
+        ->values()
+        ->map(function ($b) {
+            return [
+                'id' => $b->id,
+                'numSeatBooked' => $b->numSeatBooked,
+                'user' => [
+                    'full_name' => $b->user->full_name,
+                ],
+            ];
+        }),
+
+    'accepted' => $approvedBookings
+        ->values()
+        ->map(function ($b) {
+            return [
+                'id' => $b->id,
+                'numSeatBooked' => $b->numSeatBooked,
+                'accepted_at' => $b->accepted_at,
+                'user' => [
+                    'full_name' => $b->user->full_name,
+                ],
+            ];
+        }),
+]);
 }
 
 public function update(Request $request, $id)

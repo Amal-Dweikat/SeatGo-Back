@@ -20,6 +20,7 @@ class Booking extends Model
         'UserSelectedDays',
         'numSeatBooked',
         'status',
+        'accepted_at',
     ];
 
 

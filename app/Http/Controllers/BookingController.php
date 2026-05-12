@@ -9,40 +9,43 @@ use Illuminate\Http\Request;
 class BookingController extends Controller
 {
     public function updateStatus($id, Request $request)
-    {
-        $request->validate([
-            'status' => 'required|in:approved,rejected'
-        ]);
+{
+    $request->validate([
+        'status' => 'required|in:approved,rejected'
+    ]);
 
-        $booking = Booking::with('user')->findOrFail($id);
+    $booking = Booking::with('trip')->findOrFail($id);
+    $trip = $booking->trip;
 
-        $booking->status = $request->status;
+    $bookedSeats = Booking::where('trip_id', $trip->id)
+        ->where('status', 'approved')
+        ->where('id', '!=', $booking->id) 
+        ->sum('numSeatBooked');
 
-        if ($request->status === 'approved') {
-            $booking->accepted_at = now();
+    if ($request->status === 'approved') {
+
+        $newTotal = $bookedSeats + $booking->numSeatBooked;
+
+        if ($newTotal > $trip->TotalSeats) {
+            return response()->json([
+                'message' => 'Not enough seats available'
+            ], 422);
         }
 
-        $booking->save();
-
-        $title = $request->status === 'approved'
-            ? 'Booking Accepted ✅'
-            : 'Booking Rejected ❌';
-
-        $body = $request->status === 'approved'
-            ? 'Your booking was accepted'
-            : 'Your booking was rejected';
-
-        Notification::create([
-            'user_id' => $booking->user_id,
-            'booking_id' => $booking->id,
-            'title' => $title,
-            'body' => $body,
-            'type' => 'booking_' . $request->status,
-        ]);
-
-        return response()->json([
-            'message' => 'Status updated successfully',
-            'booking' => $booking
-        ]);
+        $booking->accepted_at = now();
     }
+
+    if ($request->status === 'rejected') {
+        $booking->accepted_at = null;
+    }
+
+    $booking->status = $request->status;
+
+    $booking->save();
+
+    return response()->json([
+        'message' => 'Status updated successfully',
+        'booking' => $booking->load('user')
+    ]);
+}
 }
