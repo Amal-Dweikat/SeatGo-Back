@@ -51,12 +51,17 @@ public function update(Request $request, $id)
 
     public function destroy($id)
 {
-    $trip = Trip::find($id);
+    $trip = Trip::with('bookings.notifications')->find($id);
 
     if (!$trip) {
         return response()->json(['message' => 'Trip not found'], 404);
     }
 
+    foreach ($trip->bookings as $booking) {
+        $booking->notifications()->delete();
+    }
+
+    $trip->bookings()->delete();
     $trip->delete();
 
     return response()->json(['message' => 'Trip deleted successfully']);
