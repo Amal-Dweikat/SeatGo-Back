@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 
 use App\Http\Controllers\ItemController;
-use App\Http\Controllers\SearchController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\BookingController;
 
