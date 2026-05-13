@@ -39,6 +39,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/myBooking', [Trips::class, 'myBookings']);
     Route::put('/booking/{id}/status', [NotificationController::class, 'changeStatusBooking']);
     Route::get('/trip/{id}', [TripInfo::class, 'getTripById']);
+    Route::get('/historyNotification', [NotificationController::class, 'historyNotification']);
     Route::get('/notification', [NotificationController::class, 'getNotification']);
     Route::put('/notification/{id}', [NotificationController::class, 'notificationRead']);
     Route::put('/user/update', [AuthController::class, 'update']);

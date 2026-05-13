@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Driver;
 use App\Models\FavoriteDriver;
 use App\Models\Notification;
+use App\Models\Trip;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -24,7 +25,6 @@ class NotificationController
 
         $booking->save();
 
-        // تحديد بيانات notification
         if ($request->status == 'approved') {
 
             $title = 'Booking Accepted ✅';
@@ -44,7 +44,7 @@ class NotificationController
 
         Notification::create([
             'user_id' => $booking->user_id,
-            'booking_id' => $booking->id,
+            'booking_id' => $booking->trip_id,
             'title' => $title,
             'body' => $body,
             'type' => $type,
@@ -57,24 +57,23 @@ class NotificationController
     public function notificationForFavorite( )
     {
         $user = auth()->id();
-
         $favorites = FavoriteDriver::where('driver_id', $user)->get();
-
+        $driverId = Driver::where('user_id', $user)->first();
+        $trip=Trip::where('driver_id', $driverId->id)->orderBy('id', 'desc')->first();
         foreach ($favorites as $favorite) {
 
               Notification::create([
                 'user_id' => $favorite->user_id,
-                'booking_id' => null,
+                'booking_id' => $trip->id,
                 'title' => 'New Trip 🚗',
                 'body' => 'Your favorite driver created a new trip',
                 'type' => 'favorite_driver_trip',
             ]);
         }
         return response()->json([
-            'notification' => $favorites
+            'notification' => $favorites,
         ]);
     }
-
 
     public function getNotification()
     {
@@ -95,4 +94,14 @@ class NotificationController
             'message' => 'Done update'
         ]);
     }
+    public function historyNotification()
+    {
+        $notification = Notification::where("user_id", auth()->id())
+            ->orderBy('id', 'desc')
+            ->get();
+        return response()->json([
+            'notification' => $notification
+        ]);
+    }
+
 }

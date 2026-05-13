@@ -51,7 +51,7 @@ class TripFactory extends Factory
             'ToRegion' => $toRegion,
             'DepartureTime' => fake()->time('H:i'),
             'ArrivalTime' => fake()->time('H:i'),
-            'DateTrip' => fake()->date(),
+            'DateTrip' => fake()->dateTimeBetween('-60 days', '+30 days'),
             'Price' => fake()->numberBetween(50, 100),
             'BookedSeats' => 0,
             'TotalSeats' => fake()->numberBetween(3, 7),
